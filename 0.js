@@ -107,9 +107,9 @@ else {
 // =====================程序执行阶段====================
 // 循环运行
 console.log("开始循环答题");
+fInfo("");
 while (true) {
-    fClear();
-    fInfo("错题：" + falseNum);
+    fSet("info", "错题：" + falseNum);
     //is_logExist();//判断日志文件是否存在
     // 获取根节点
     //globalIsObjFrame = false    
