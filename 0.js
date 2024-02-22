@@ -582,7 +582,7 @@ function fInit() {
         `<card cardCornerRadius='8dp' alpha="0.8">
             <vertical>
                 <horizontal bg='#FF000000' padding='10 5'>
-                    <text id='version' textColor="#FFFFFF" textSize="18dip">四人赛跑题库+</text>
+                    <text id='version' textColor="#FFFFFF" textSize="18dip">挑战刷题库+</text>
                     <text id='title' h="*" textColor="#FFFFFF" textSize="13dip" layout_weight="1" gravity="top|right"></text>
                 </horizontal>
                 <ScrollView>
@@ -596,7 +596,7 @@ function fInit() {
     );
     ui.run(function () {
         //w.title.setFocusable(true);
-        w.version.setText("四人赛刷题助手");
+        w.version.setText("挑战刷题");
     });
     w.setSize(720, -2);
     w.setPosition(10, 10);
