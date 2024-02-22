@@ -107,6 +107,7 @@ else {
 // =====================程序执行阶段====================
 // 循环运行
 console.log("开始循环答题");
+fClear();
 fInfo("");
 while (true) {
     fSet("info", "错题：" + falseNum);
