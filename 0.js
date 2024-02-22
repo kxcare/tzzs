@@ -23,7 +23,7 @@ var imagetext_false = "AAAAASUVORK5CYII=" // 答题错误时Image控件文本
 // 定义日志文件的路径
 var logFilePath = "/sdcard/脚本/挑战答题运行日志.txt";
 // 创建日志文件
-if (files.isFile(logFilePath)){
+if (files.isFile(logFilePath)) {
     console.log("存在日志文件");
 }
 else {
@@ -45,9 +45,10 @@ var chongzhi_cishu = STZS_CONFIG.get("chongzhi_cishu", "10");
 // 判断是否是隐私模式版本，新版本为隐私模式不可截屏，2.33版本可截屏
 // var isPrivateMode = version1GreaterVersion2(getVersion("cn.xuexi.android"), privateModeStartVersion)
 // 其它全局变量定义
-var globalAnswerRunning = false
+var globalAnswerRunning = false;
 var globalLastdate = new Date().getTime();
-var globalIsObjFrame = false
+var globalIsObjFrame = false;
+var falseNum = 0;
 
 
 // 自动允许权限进程
@@ -106,7 +107,9 @@ else {
 // =====================程序执行阶段====================
 // 循环运行
 console.log("开始循环答题");
+fClear();
 while (true) {
+    fInfo("错题：" + falseNum);
     //is_logExist();//判断日志文件是否存在
     // 获取根节点
     //globalIsObjFrame = false    
@@ -152,16 +155,17 @@ while (true) {
             // 如果没有查找到答案，就随机一个选项来点击，如果是非隐私模式，截屏查找正确答案，否则选项正确才更新答案
             click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
             console.error('新题目已更新到题库');
+            falseNum++;
             sleep(2000);
         }
     }
-    
+
     //显示已答题数
     try {
-        if (textStartsWith("连续答对").exists()){
+        if (textStartsWith("连续答对").exists()) {
             let lx_true = textStartsWith("连续答对").findOne(2000).text();
             console.info(lx_true);
-        }     
+        }
     } catch (error) {
         console.error("显示题数报错" + error);
     }
@@ -288,7 +292,7 @@ function handling_submit_exceptions() {
         while (true) {
             // console.log("检测网络开小差");
             // textStartsWith("网络开小差").waitFor();
-            if(textStartsWith("网络开小差").exists()){
+            if (textStartsWith("网络开小差").exists()) {
                 sleep(1000);
                 console.log("网络开小差");
                 text("确定").findOne().click();
@@ -296,9 +300,9 @@ function handling_submit_exceptions() {
                 while (true) {
                     let ztk_click = textStartsWith("total").findOne(3000).click();
                     console.log("点击强国总题库：" + ztk_click);
-                    if(tz_click){
+                    if (tz_click) {
                         break
-                    }else{
+                    } else {
                         console.log("找不到强国总体库按钮，点击挑战答题");
                         let tz_click = textStartsWith("challenge").findOne(3000).click();
                         console.log("点击挑战答题：" + tz_click);
@@ -541,11 +545,11 @@ function finish() {
     auto.service.performGlobalAction(8);//锁屏
 }
 
- //日志写到文件
-function logWrite(logContent){
+//日志写到文件
+function logWrite(logContent) {
     let currentTime = dateFormat(new Date(), 'yyyy年MM月dd日 hh:mm:ss'); // 获取当前时间
     re_log = currentTime + "   " + logContent; // 日志信息
-     // 写入日志
+    // 写入日志
     files.append(logFilePath, re_log + "\n");
 }
 
