@@ -1,10 +1,15 @@
 auto.waitFor();
 events.observeToast();//开启 Toast 监听，Toast 监听依赖于无障碍服务，因此此函数会确保无障碍服务运行
+auto.setMode("fast");//该模式下会启用控件缓存，从而选择器获取屏幕控件更快
 /*
     @author: mondayfirst
     @github: https://github.com/mondayfirst/XXQG_TiKu
     @description: 本脚本可在Auto.js上执行。
 */
+var w = fInit();
+fInfo("挑战助手" + "脚本初始化");
+var [device_w, device_h] = init_wh();//init_wh()是返回设备宽和高的函数
+
 
 // =====================参数设置====================
 var query_mode = "Json"; // 服务器答案查找模式，二选一："Server" or "Json" 
@@ -45,8 +50,22 @@ var globalLastdate = new Date().getTime();
 var globalIsObjFrame = false
 
 
-if (!requestScreenCapture()) {
-    toast('请求截屏失败')// 请求截屏
+// 自动允许权限进程
+threads.start(function () {
+    //在新线程执行的代码
+    toastLog("开始自动获取截图权限");
+    var btn = className("android.widget.Button").textMatches(/允许|立即开始|START NOW/).findOne(5000);
+    if (btn) {
+        sleep(1000);
+        btn.click();
+    }
+    toastLog("结束获取截图权限");
+});
+fInfo("请求截图权限");
+// 请求截图权限、似乎请求两次会失效
+if (!requestScreenCapture(false)) { // false为竖屏方向
+    fError('请求截图失败');
+    exit();
 }
 
 // 初始化opencv
@@ -537,4 +556,103 @@ function is_logExist() {
     } else {
         console.error("日志文件已被删除")
     }
+}
+
+// 屏幕宽高、方向初始化
+function init_wh() {
+    fInfo("屏幕方向检测");
+    log(device.width + "*" + device.height);
+    var device_w = depth(0).findOne().bounds().width();
+    var device_h = depth(0).findOne().bounds().height();
+    log(device_w + "*" + device_h);
+    if (device.width == device_h && device.height == device_w) {
+        fError("设备屏幕方向检测为横向，后续运行很可能会报错，建议调整后重新运行脚本");
+        sleep(10000);
+    } else if (device.width == 0 || device.height == 0) {
+        fError("识别不出设备宽高，建议重启强国助手后重新运行脚本");
+        sleep(10000);
+    }
+    return [device_w, device_h]
+}
+
+/*******************悬浮窗*******************/
+function fInit() {
+    // ScrollView下只能有一个子布局
+    var w = floaty.rawWindow(
+        `<card cardCornerRadius='8dp' alpha="0.8">
+            <vertical>
+                <horizontal bg='#FF000000' padding='10 5'>
+                    <text id='version' textColor="#FFFFFF" textSize="18dip">四人赛跑题库+</text>
+                    <text id='title' h="*" textColor="#FFFFFF" textSize="13dip" layout_weight="1" gravity="top|right"></text>
+                </horizontal>
+                <ScrollView>
+                    <vertical bg='#AA000000' id='container' minHeight='20' gravity='center'></vertical>
+                </ScrollView>
+            </vertical>
+            <relative gravity="right|bottom">
+                <text id="username" textColor="#FFFFFF" textSize="12dip" padding='5 0'></text>
+            </relative>
+        </card>`
+    );
+    ui.run(function () {
+        //w.title.setFocusable(true);
+        w.version.setText("四人赛刷题助手");
+    });
+    w.setSize(720, -2);
+    w.setPosition(10, 10);
+    w.setTouchable(false);
+    return w;
+}
+
+function fSet(id, txt) {
+    ui.run(function () {
+        w.findView(id).setText(txt);
+    });
+}
+
+function fInfo(str) {
+    ui.run(function () {
+        let textView = ui.inflate(`<text id="info" maxLines="2" textColor="#7CFC00" textSize="15dip" padding='5 0'></text>`, w.container);
+        textView.setText(str.toString());
+        w.container.addView(textView);
+    });
+    console.info(str);
+}
+
+function fError(str) {
+    ui.run(function () {
+        let textView = ui.inflate(`<text id="error" maxLines="2" textColor="#FF0000" textSize="15dip" padding='5 0'></text>`, w.container);
+        textView.setText(str.toString());
+        w.container.addView(textView);
+    });
+    console.error(str);
+}
+
+function fTips(str) {
+    ui.run(function () {
+        let textView = ui.inflate(`<text id="tips" maxLines="2" textColor="#FFFF00" textSize="15dip" padding='5 0'></text>`, w.container);
+        textView.setText(str.toString());
+        w.container.addView(textView);
+    });
+    console.info(str);
+}
+
+function fClear() {
+    ui.run(function () {
+        w.container.removeAllViews();
+    });
+}
+
+function fRefocus() {
+    threads.start(function () {
+        ui.run(function () {
+            w.requestFocus();
+            w.title.requestFocus();
+            ui.post(function () {
+                w.title.clearFocus();
+                w.disableFocus();
+            }, 200);
+        });
+    });
+    sleep(500);
 }
