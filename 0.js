@@ -433,11 +433,23 @@ function get_ui_answsers_from_obj_node(obj_node) {
 function find_true_answer_from_img(Nodes, region) {
     // 截图并从图片中根据答案的颜色寻找正确的答案选项，输出答案的文本
     var img = images.captureScreen();
-    var point = images.findColor(img, '#3dbf75', {
-        // 目的是防止找到倒计时的绿色进度条
-        region: region,
-        threshold: 10
-    });
+    var point = "";
+    try {
+        point = images.findColor(img, '#3dbf75', {
+            // 目的是防止找到倒计时的绿色进度条
+            region: region,
+            threshold: 10
+        });
+    } catch (e) {
+        let region2 = [0, Math.floor(device_h / 3), device_w, Math.floor(device_h * 2 / 3)];
+        point = images.findColor(img, '#3dbf75', {
+            // 目的是防止找到倒计时的绿色进度条
+            region: region2,
+            threshold: 10
+        });
+        console.log(e);
+        toastLog("找色异常，截屏2/3寻找")
+    }
     if (point == null) {
         images.save(img, "/sdcard/2.jpg");
         console.log(region);
