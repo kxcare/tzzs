@@ -254,8 +254,9 @@ function swipe_to_view_the_last_answer(answer_uis) {
 }
 function click_answer_radio_button(answer_uis, question, answers, idx, isMustPost, obj_node) {
     answer_uis[idx].parent().click();
-    var ansb = obj_node.child(1).bounds();
-    var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()];
+    // var ansb = obj_node.child(1).bounds();
+    var ansb = className("android.widget.ListView").findOne().bounds();
+    var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
     sleep(500);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
