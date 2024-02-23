@@ -108,7 +108,7 @@ else {
 // 循环运行
 console.log("开始循环答题");
 fClear();
-fInfo("错题：" + falseNum);
+fInfo("已收录错题：" + falseNum + " 个");
 while (true) {
     //is_logExist();//判断日志文件是否存在
     // 获取根节点
@@ -156,7 +156,7 @@ while (true) {
             click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
             console.error('新题目已更新到题库');
             falseNum++;
-            fSet("info", "错题：" + falseNum);
+            fSet("info", "已收录错题：" + falseNum + " 个");
             sleep(2000);
         }
     }
@@ -439,6 +439,7 @@ function find_true_answer_from_img(Nodes, region) {
     });
     if (point == null) {
         images.save(img, "/sdcard/2.jpg");
+        console.log(region);
         console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
         throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
     }
