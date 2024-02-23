@@ -437,11 +437,12 @@ function find_true_answer_from_img(Nodes, region) {
         region: region,
         threshold: 4
     });
-    img.recycle();
     if (point == null) {
+        images.save(img, "/sdcard/2.jpg");
         console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
         throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
     }
+    img.recycle();
     var true_ans = null
     var x = point.x
     var y = point.y
