@@ -108,7 +108,7 @@ else {
 // 循环运行
 console.log("开始循环答题");
 fClear();
-fInfo("本次收录错题：" + falseNum + " 个");
+fInfo("本轮收录错题：" + falseNum + " 个");
 while (true) {
     //is_logExist();//判断日志文件是否存在
     // 获取根节点
@@ -156,7 +156,7 @@ while (true) {
             click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
             console.error('新题目已更新到题库');
             falseNum++;
-            fSet("info", "本次收录错题：" + falseNum + " 个");
+            fSet("info", "本轮收录错题：" + falseNum + " 个");
             sleep(2000);
         }
     }
@@ -257,6 +257,10 @@ function click_answer_radio_button(answer_uis, question, answers, idx, isMustPos
     // var ansb = obj_node.child(1).bounds();
     var ansb = className("android.widget.ListView").findOne().bounds();
     var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
+    if (ansb.left >= device_w / 2) {
+        answers_region = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 3)];
+        toastLog("答案检测区域已强制更换");
+    }
     sleep(266);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
@@ -433,46 +437,33 @@ function get_ui_answsers_from_obj_node(obj_node) {
 function find_true_answer_from_img(Nodes, region) {
     // 截图并从图片中根据答案的颜色寻找正确的答案选项，输出答案的文本
     var img = images.captureScreen();
-    var point = "";
-    try {
-        point = images.findColor(img, '#3dbf75', {
-            // 目的是防止找到倒计时的绿色进度条
-            region: region,
-            threshold: 10
-        });
-        toastLog("找色成功");
-    } catch (e) {
-        let region2 = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 3)];
-        point = images.findColor(img, '#3dbf75', {
-            // 目的是防止找到倒计时的绿色进度条
-            region: region2,
-            threshold: 10
-        });
-        console.log(e);
-        toastLog("找色异常，截屏3/4寻找");
+    var point = images.findColor(img, '#3dbf75', {
+        // 目的是防止找到倒计时的绿色进度条
+        region: region,
+        threshold: 4
+    });
+if (point == null) {
+    images.save(img, "/sdcard/2.jpg");
+    console.log(region);
+    console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
+    throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
+}
+img.recycle();
+var true_ans = null
+var x = point.x
+var y = point.y
+for (var i = 0; i < Nodes.length; i++) {
+    var a = Nodes[i].bounds()
+    if (y >= a.top && y <= a.bottom) {
+        true_ans = Nodes[i].text();
+        break;
     }
-    if (point == null) {
-        images.save(img, "/sdcard/2.jpg");
-        console.log(region);
-        console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
-        throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
-    }
-    img.recycle();
-    var true_ans = null
-    var x = point.x
-    var y = point.y
-    for (var i = 0; i < Nodes.length; i++) {
-        var a = Nodes[i].bounds()
-        if (y >= a.top && y <= a.bottom) {
-            true_ans = Nodes[i].text();
-            break;
-        }
-    }
-    if (true_ans == null) {
-        console.log("Error:未找到答案！")
-        throw "Error:未找到答案！"
-    }
-    return true_ans
+}
+if (true_ans == null) {
+    console.log("Error:未找到答案！")
+    throw "Error:未找到答案！"
+}
+return true_ans
 }
 function join_question_with_answer(question, answers) {
     question = question.replace(/ /g, "")
