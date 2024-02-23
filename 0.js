@@ -257,7 +257,7 @@ function click_answer_radio_button(answer_uis, question, answers, idx, isMustPos
     // var ansb = obj_node.child(1).bounds();
     var ansb = className("android.widget.ListView").findOne().bounds();
     var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
-    sleep(500);
+    sleep(266);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
         // 点击正确，视参数来更新答案
