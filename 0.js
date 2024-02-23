@@ -108,9 +108,8 @@ else {
 // 循环运行
 console.log("开始循环答题");
 fClear();
-fInfo("");
+fInfo("错题：" + falseNum);
 while (true) {
-    fSet("info", "错题：" + falseNum);
     //is_logExist();//判断日志文件是否存在
     // 获取根节点
     //globalIsObjFrame = false    
@@ -157,6 +156,7 @@ while (true) {
             click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
             console.error('新题目已更新到题库');
             falseNum++;
+            fSet("info", "错题：" + falseNum);
             sleep(2000);
         }
     }
@@ -432,6 +432,7 @@ function get_ui_answsers_from_obj_node(obj_node) {
 function find_true_answer_from_img(Nodes, region) {
     // 截图并从图片中根据答案的颜色寻找正确的答案选项，输出答案的文本
     var img = images.captureScreen();
+    images.save(img,"/sdcard/1.jpg");
     var point = images.findColor(img, '#3dbf75', {
         // 目的是防止找到倒计时的绿色进度条
         region: region,
