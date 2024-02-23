@@ -432,7 +432,6 @@ function get_ui_answsers_from_obj_node(obj_node) {
 function find_true_answer_from_img(Nodes, region) {
     // 截图并从图片中根据答案的颜色寻找正确的答案选项，输出答案的文本
     var img = images.captureScreen();
-    images.save(img,"/sdcard/1.jpg");
     var point = images.findColor(img, '#3dbf75', {
         // 目的是防止找到倒计时的绿色进度条
         region: region,
