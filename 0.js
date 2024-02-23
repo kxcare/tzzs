@@ -259,7 +259,8 @@ function click_answer_radio_button(answer_uis, question, answers, idx, isMustPos
     var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
     if (ansb.left >= device_w / 2) {
         answers_region = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 4)];
-        toastLog("答案检测区域已强制更换");
+        console.log(answers_region);
+        console.log("答案检测区域已强制更换");
     }
     sleep(266);
     if (textEndsWith(imagetext_true).exists()) {
