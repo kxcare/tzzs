@@ -440,15 +440,16 @@ function find_true_answer_from_img(Nodes, region) {
             region: region,
             threshold: 10
         });
+        toastLog("找色成功");
     } catch (e) {
-        let region2 = [0, Math.floor(device_h / 3), device_w, Math.floor(device_h * 2 / 3)];
+        let region2 = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 3)];
         point = images.findColor(img, '#3dbf75', {
             // 目的是防止找到倒计时的绿色进度条
             region: region2,
             threshold: 10
         });
         console.log(e);
-        toastLog("找色异常，截屏2/3寻找")
+        toastLog("找色异常，截屏3/4寻找");
     }
     if (point == null) {
         images.save(img, "/sdcard/2.jpg");
