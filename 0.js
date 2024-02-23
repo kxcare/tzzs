@@ -255,8 +255,8 @@ function swipe_to_view_the_last_answer(answer_uis) {
 function click_answer_radio_button(answer_uis, question, answers, idx, isMustPost, obj_node) {
     answer_uis[idx].parent().click();
     var ansb = obj_node.child(1).bounds();
-    console.log(ansb);
     var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
+    console.log(answers_region);
     sleep(266);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
