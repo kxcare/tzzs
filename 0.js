@@ -255,14 +255,14 @@ function swipe_to_view_the_last_answer(answer_uis) {
 function click_answer_radio_button(answer_uis, question, answers, idx, isMustPost, obj_node) {
     answer_uis[idx].parent().click();
     var ansb = obj_node.child(1).bounds();
-    var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
-    sleep(266);
+    var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()];
+    sleep(200);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
         // 点击正确，视参数来更新答案
         var true_ans = answers[idx]
         console.log("正确答案是：" + true_ans);
-        //更新到新题库
+        //更tfv新到新题库
         // post_answer_to_newjson(question, answers, true_ans);
         if (isMustPost) {
             post_answer(question, answers, true_ans);
