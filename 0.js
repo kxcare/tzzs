@@ -435,7 +435,7 @@ function find_true_answer_from_img(Nodes, region) {
     var point = images.findColor(img, '#3dbf75', {
         // 目的是防止找到倒计时的绿色进度条
         region: region,
-        threshold: 4
+        threshold: 10
     });
     if (point == null) {
         images.save(img, "/sdcard/2.jpg");
