@@ -1,6 +1,6 @@
 auto.waitFor();
 events.observeToast();//开启 Toast 监听，Toast 监听依赖于无障碍服务，因此此函数会确保无障碍服务运行
-auto.setMode("fast");//该模式下会启用控件缓存，从而选择器获取屏幕控件更快
+// auto.setMode("fast");//该模式下会启用控件缓存，从而选择器获取屏幕控件更快
 /*
     @author: mondayfirst
     @github: https://github.com/mondayfirst/XXQG_TiKu
