@@ -256,7 +256,7 @@ function click_answer_radio_button(answer_uis, question, answers, idx, isMustPos
     answer_uis[idx].parent().click();
     var ansb = obj_node.child(1).bounds();
     var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()];
-    sleep(200);
+    sleep(500);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
         // 点击正确，视参数来更新答案
