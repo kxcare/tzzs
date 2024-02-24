@@ -253,15 +253,13 @@ function swipe_to_view_the_last_answer(answer_uis) {
     }
 }
 function click_answer_radio_button(answer_uis, question, answers, idx, isMustPost, obj_node) {
-    answer_uis[idx].parent().click();
     // var ansb = obj_node.child(1).bounds();
-    var ansb = className("android.widget.ListView").findOne().bounds();
-    var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()]
-    if (ansb.left >= device_w / 2) {
-        answers_region = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 4)];
-        console.log("答案检测区域已强制更换");
-    }
-    sleep(266);
+    answer_uis[idx].parent().click();
+    // if (ansb.left >= device_w / 2) {
+    //     answers_region = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 4)];
+    //     console.log("答案检测区域已强制更换");
+    // }
+    sleep(200);
     if (textEndsWith(imagetext_true).exists()) {
         console.log("点击正确");
         // 点击正确，视参数来更新答案
@@ -275,6 +273,8 @@ function click_answer_radio_button(answer_uis, question, answers, idx, isMustPos
     } else if (textEndsWith(imagetext_false).exists()) {
         console.log("点击错误");
         // 点击错误，立刻截图更新答案
+        var ansb = className("android.widget.ListView").findOne().bounds();
+        var answers_region = [ansb.left, ansb.top, ansb.width(), ansb.height()];
         var true_ans = find_true_answer_from_img(answer_uis, answers_region);
         post_answer(question, answers, true_ans);
         sleep(2000);
