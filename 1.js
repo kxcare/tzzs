@@ -24,7 +24,7 @@ var img3 = null;//初始一个参数，方便开启找色线程
 sleep(1000);
 // 初始化文字识别插件
 // var 文字识别插件 = commonStorage.get("文字识别插件") || "谷歌"
-var 文字识别插件 = "谷歌"
+var 文字识别插件 = "Paddle"
 utils.initOcr(文字识别插件);
 //打开悬浮窗
 var w = fInit();
