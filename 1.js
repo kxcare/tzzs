@@ -64,16 +64,20 @@ if (!requestScreenCapture(false)) { // false为竖屏方向
     fError('请求截图失败');
     exit();
 }
-//加载Google OCR插件
-fInfo("初始化MLkitOCR插件");
-try {
-    var MLKitOCR = plugins.load('org.autojs.autojspro.plugin.mlkit.ocr');
-    var googleOcr = new MLKitOCR();
-} catch (e) {
-    fError("GoogleMLKit插件加载失败");
-    exit();
-}
+// //加载Google OCR插件
+// fInfo("初始化MLkitOCR插件");
+// try {
+//     var MLKitOCR = plugins.load('org.autojs.autojspro.plugin.mlkit.ocr');
+//     var googleOcr = new MLKitOCR();
+// } catch (e) {
+//     fError("GoogleMLKit插件加载失败");
+//     exit();
+// }
 
+fInfo("初始化PaddleOcr插件");
+var paddleOcr = $ocr.create({
+    models: 'slim', // 指定精度相对低但速度更快的模型，若不指定则为default模型，精度高一点但速度慢一点
+});
 // 防止设备息屏
 fInfo("设置屏幕常亮");
 device.keepScreenOn(3600 * 1000);
@@ -314,7 +318,7 @@ function do_duizhan1(renshu) {
             }
             // 为了适配OCR插件改为下面这句
             console.time('题目识别');
-            var que_txt = google_ocr_api(que_img).replace(/[^\u4e00-\u9fa5\d]|\d{1,2}\./g, "");//使用正则表达式将｜两侧的格式进行清理，左侧是指匹配所有汉字和数字然后取反，右侧是匹配数字1或2后面带点的，全部替换为空字符串
+            var que_txt = paddle_ocr_api(que_img).replace(/[^\u4e00-\u9fa5\d]|\d{1,2}\./g, "");//使用正则表达式将｜两侧的格式进行清理，左侧是指匹配所有汉字和数字然后取反，右侧是匹配数字1或2后面带点的，全部替换为空字符串
             console.timeEnd('题目识别');
             if (que_txt) {
                 fInfo("题目识别：" + que_txt);
@@ -380,7 +384,7 @@ function do_duizhan1(renshu) {
         //images.save(allx_img, '/sdcard/1/x_img' + num + '.png');
         let xuan_txt_list = [];
         let allx_txt = "";
-        let x_results = googleOcr.detect(img);
+        let x_results = paddleOcr.detect(img);
         //console.log(x_results);//打桩看哪里有问题
         try {
             allx_txt = ocr_rslt_to_txt(x_results).replace(/\s+/g, "");
@@ -708,7 +712,7 @@ function ocr_test() {
         log("开始识别");
         //console.time("OCR识别结束");
         let begin = new Date();
-        let test_txt = google_ocr_api(img_test);
+        let test_txt = paddle_ocr_api(img_test);
 
         //console.timeEnd("OCR识别结束");
         let end = new Date();
@@ -866,10 +870,51 @@ function fRefocus() {
     sleep(500);
 }
 
-//Google OCR配置函数
-function google_ocr_api(img) {
-    console.log('GoogleMLKit文字识别中');
-    let list = googleOcr.detect(img); // 识别文字，并得到results
+// //Google OCR配置函数
+// function google_ocr_api(img) {
+//     console.log('GoogleMLKit文字识别中');
+//     let list = googleOcr.detect(img); // 识别文字，并得到results
+//     let eps = 30; // 坐标误差
+//     for (
+//         var i = 0; i < list.length; i++ // 选择排序对上下排序,复杂度O(N²)但一般list的长度较短只需几十次运算
+//     ) {
+//         for (var j = i + 1; j < list.length; j++) {
+//             if (list[i]['bounds']['bottom'] > list[j]['bounds']['bottom']) {
+//                 var tmp = list[i];
+//                 list[i] = list[j];
+//                 list[j] = tmp;
+//             }
+//         }
+//     }
+
+//     for (
+//         var i = 0; i < list.length; i++ // 在上下排序完成后，进行左右排序
+//     ) {
+//         for (var j = i + 1; j < list.length; j++) {
+//             // 由于上下坐标并不绝对，采用误差eps
+//             if (
+//                 Math.abs(list[i]['bounds']['bottom'] - list[j]['bounds']['bottom']) <
+//                 eps &&
+//                 list[i]['bounds']['left'] > list[j]['bounds']['left']
+//             ) {
+//                 var tmp = list[i];
+//                 list[i] = list[j];
+//                 list[j] = tmp;
+//             }
+//         }
+//     }
+//     let res = '';
+//     for (var i = 0; i < list.length; i++) {
+//         res += list[i]['text'];
+//     }
+//     list = null;
+//     return res;
+// }
+
+//Paddle OCR配置函数
+function paddle_ocr_api(img) {
+    console.log('PaddleOcr文字识别中');
+    let list = paddleOcr.detect(img); // 识别文字，并得到results
     let eps = 30; // 坐标误差
     for (
         var i = 0; i < list.length; i++ // 选择排序对上下排序,复杂度O(N²)但一般list的长度较短只需几十次运算
@@ -906,7 +951,6 @@ function google_ocr_api(img) {
     list = null;
     return res;
 }
-
 //识字点击
 function clicktext(wenzi) {
     let img = captureScreen();
