@@ -74,7 +74,7 @@ if (!requestScreenCapture(false)) { // false为竖屏方向
 //     exit();
 // }
 
-fInfo("初始化PaddleOcr插件");
+fInfo("初始化PaddleOCR插件");
 var paddleOcr = $ocr.create({
     models: 'slim', // 指定精度相对低但速度更快的模型，若不指定则为default模型，精度高一点但速度慢一点
 });
@@ -137,36 +137,7 @@ if (four_radio != null) {
     exit();
     throw ("未检测到四人赛答题按钮，退出中……")
 }
-//开启找色线程
-// var zhaose_thread = threads.start(function () {
-//     while (true) {
-//         if (img3 == null) {
-//             continue;
-//         } else {
-//             if (images.findColor(img3, "#F54F75", {
-//                 threshold: 40
-//             })) {
-//                 fError("找色线程识别到红色错题标记");
-//                 img3Save();
-//                 img3.recycle();
-//                 img3 = null;
-//                 img2.recycle();
-//                 continue;
-//             } else {
-//                 console.log("没有找到错题");
-//                 img3.recycle();
-//                 img3 = null;
-//                 img2.recycle();
-//                 continue;
-//             }
-//         }
-//     }
-// });
-// if (zhaose_thread) {
-//     toastLog("找色线程已开启")
-// } else {
-//     throw "找色线程未开启"
-// }
+
 //点击四人赛
 if (ocr_test()) {
     if (text("开始比赛").exists()) {
@@ -179,7 +150,6 @@ if (ocr_test()) {
 }
 //zhaose_thread.isAlive() && (zhaose_thread.interrupt(), fInfo("终止找色线程"));
 finish();//结束刷题
-
 
 
 /*****************结束后配置*****************/
@@ -452,7 +422,7 @@ function do_duizhan1(renshu) {
         if (xuan_txt_list && xuan_txt_list.length != radio_num) {
             console.error("选项个数和识别个数不匹配处理");
             //xuan_txt_list = allx_txt.match(/[A-D][^a-zA-Z\u4e00-\u9fa5\d]\s*.*?(?=[A-D][^a-zA-Z\u4e00-\u9fa5\d]|$)/g);
-            xuan_txt_list = allx_txt.match(/[A-D]\.\s*.*?(?=[A-D]\.|$)/g);
+            xuan_txt_list = allx_txt.match(/[a-d]\.\s*.*?(?=[a-d]\.|$)/gi);
         }
         log(xuan_txt_list);
         log("清洗后：" + xuan_txt_list.toString());//输出清洗后的选项列表
