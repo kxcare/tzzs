@@ -1,7 +1,7 @@
 auto.waitFor(); //mode = "fast"
 var delay_time = 3000;
 device.wakeUpIfNeeded();//如果屏幕没有点亮，则唤醒设备。
-var fast_mode = true;
+var fast_mode = false;
 //判断是否快速模式
 if (fast_mode) {
     auto.setMode("fast");//该模式下会启用控件缓存，从而选择器获取屏幕控件更快
