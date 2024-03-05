@@ -1,7 +1,7 @@
 auto.waitFor(); //mode = "fast"
 var delay_time = 3000;
 device.wakeUpIfNeeded();//如果屏幕没有点亮，则唤醒设备。
-var fast_mode = false;
+var fast_mode = true;
 //判断是否快速模式
 if (fast_mode) {
     auto.setMode("fast");//该模式下会启用控件缓存，从而选择器获取屏幕控件更快
@@ -243,6 +243,7 @@ function do_duizhan1(renshu) {
                     images.save(img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
                     img.recycle();
                     err_flag = false;
+                    auto.clearCache();
                     fClear();
                     continue;
                 }
@@ -255,6 +256,7 @@ function do_duizhan1(renshu) {
                     images.save(img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
                     img.recycle();
                     err_flag = false;
+                    auto.clearCache();
                     continue;
                 }
             }
@@ -626,8 +628,8 @@ function str_similar(str1, str2) {
         muzi = str1;
         instr = str2;
     }
-    let reg = "/[" + muzi + "]{1}/g";
-    let resu = instr.match(eval(reg));
+    let reg = new RegExp("[" + muzi + "]{1}", "g");
+    let resu = instr.match(reg);
     if (resu) {
         return (resu.length / instr.length);
     } else {
