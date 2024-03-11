@@ -231,20 +231,23 @@ function do_duizhan1(renshu) {
         }
         // 根据父框的孩子数
         if (view_d28.childCount() > 0) {
-            que_x = view_d28.bounds().left;
-            que_y = view_d28.bounds().top;
-            que_w = view_d28.bounds().width();
+            let que_x = view_d28.bounds().left;
+            let que_y = view_d28.bounds().top;
+            let que_w = view_d28.bounds().width();
+            let que_h = "";
             if (view_d28.child(0).text().length <= 4) { //有来源的是前面两个空格元素，文本为4个空格
                 que_h = view_d28.child(2).bounds().top - view_d28.bounds().top;
                 if (que_h < 32) {
-                    fError("有来源图片高度不够");
+                    fError("有来源，图片高度不够");
                     console.log(view_d28.child(2).bounds().top, view_d28.bounds().top);
                     let img = captureScreen();
-                    images.save(img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
+                    que_h = view_d28.child(0).bounds().bottom - view_d28.bounds().top;
+                    let que_img = images.clip(img, que_x, que_y, que_w, que_h);
+                    images.save(que_img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
                     img.recycle();
+                    que_img.recycle();
                     err_flag = false;
                     auto.clearCache();
-                    fClear();
                     continue;
                 }
             } else { //无来源的是题目，文本为8个空格
