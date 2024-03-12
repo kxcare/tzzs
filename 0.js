@@ -109,83 +109,99 @@ else {
 console.log("开始循环答题");
 fClear();
 fInfo("本轮收录错题：" + falseNum + " 个");
-while (true) {
-    //is_logExist();//判断日志文件是否存在
-    // 获取根节点
-    //globalIsObjFrame = false    
-    //更改depth为24，尝试修复不检测答题失败情况
-    if (!className("android.widget.Image").depth(24).textMatches(/\S+/).exists()) {
-        sleep(100)
-        var obj_node = get_ui_obj_from_posstr(挑战答题索引)
-        if (obj_node == null) {
-            console.log("找不到挑战答题索引")
-            sleep(random_time(1000))
-            continue
-        }
 
-        // 获取目标控件和文本
-        var q_ui = get_ui_question_from_obj_node(obj_node);
-        try {
-            var a_uis = get_ui_answsers_from_obj_node(obj_node);
-        } catch (e) {
-            logWrite("获取不到答案控件，返回继续循环");
-            sleep(random_time(1000))
-            continue
-        }
-        var question = q_ui.text();
-        var answers = [];
-        for (var i = 0; i < a_uis.length; i++) {
-            answers.push(a_uis[i].text())
-        }
-        console.log(join_question_with_answer(question, answers)) // 显示拼接后的键
-        // 滑动窗口
-        swipe_to_view_the_last_answer(a_uis); // 滑动窗口来显示最后一个答案
-        // 点击答案
-        var true_answer_index = get_answer(question, answers);
-        console.log("开始点击");
-        if (true_answer_index >= 0) {
-            let click_value = click_answer_radio_button(a_uis, question, answers, true_answer_index, false, obj_node);
-            //尝试修复旧机子因识别不到正确错误标识卡退
-            if (click_value) {
-                sleep(6000);
-                continue;
-            }
-            console.log("题库已收录此题目");
-        } else {
-            // 如果没有查找到答案，就随机一个选项来点击，如果是非隐私模式，截屏查找正确答案，否则选项正确才更新答案
-            click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
-            console.error('新题目已更新到题库');
-            falseNum++;
-            fSet("info", "本轮收录错题：" + falseNum + " 个");
-            sleep(2000);
-        }
-    }
-
-    //显示已答题数
-    try {
-        if (textStartsWith("连续答对").exists()) {
-            let lx_true = textStartsWith("连续答对").findOne(2000).text();
-            console.info(lx_true);
-        }
-    } catch (error) {
-        console.error("显示题数报错" + error);
-    }
-
-    sleep(cycle_wait_time);
-    // 处理答题失败和50题选项
-    //console.log("处理答题失败和50题选项");
-    if (jump_tips_50TrueQuestions() || jump_tips_ErrorAnswer()) {
-        sleep(2000)
-    }
-    if (textContains("全部通关").exists()) {
-        is_logExist();//判断日志文件是否存在
+if(text("时事政治").exists()){
+    toastLog("刷题任务马上开始");
+    sleep(3000);
+}
+var sel_task = ["时事政治", "法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
+for (i = 0; i <= sel_task.length - 1; i++) {
+    let task_click = sel_task[i].parent().click();
+    if (task_click) {
         sleep(3000);
-        console.log("完成任务截屏：" + auto.service.performGlobalAction(9));
-        is_logExist();//判断日志文件是否存在
-        finish();
-        break
+        task();
     }
+    toastLog(sel_task[i]+"已刷完");
+    sleep(3000);
+}
 
+console.log("完成任务截屏：" + auto.service.performGlobalAction(9));
+is_logExist();//判断日志文件是否存在
+finish();
+function task() {
+    while (true) {
+        //is_logExist();//判断日志文件是否存在
+        // 获取根节点
+        //globalIsObjFrame = false    
+        //更改depth为24，尝试修复不检测答题失败情况
+        if (!className("android.widget.Image").depth(24).textMatches(/\S+/).exists()) {
+            sleep(100)
+            var obj_node = get_ui_obj_from_posstr(挑战答题索引)
+            if (obj_node == null) {
+                console.log("找不到挑战答题索引")
+                sleep(random_time(1000))
+                continue
+            }
+
+            // 获取目标控件和文本
+            var q_ui = get_ui_question_from_obj_node(obj_node);
+            try {
+                var a_uis = get_ui_answsers_from_obj_node(obj_node);
+            } catch (e) {
+                logWrite("获取不到答案控件，返回继续循环");
+                sleep(random_time(1000))
+                continue
+            }
+            var question = q_ui.text();
+            var answers = [];
+            for (var i = 0; i < a_uis.length; i++) {
+                answers.push(a_uis[i].text())
+            }
+            console.log(join_question_with_answer(question, answers)) // 显示拼接后的键
+            // 滑动窗口
+            swipe_to_view_the_last_answer(a_uis); // 滑动窗口来显示最后一个答案
+            // 点击答案
+            var true_answer_index = get_answer(question, answers);
+            console.log("开始点击");
+            if (true_answer_index >= 0) {
+                let click_value = click_answer_radio_button(a_uis, question, answers, true_answer_index, false, obj_node);
+                //尝试修复旧机子因识别不到正确错误标识卡退
+                if (click_value) {
+                    sleep(6000);
+                    continue;
+                }
+                console.log("题库已收录此题目");
+            } else {
+                // 如果没有查找到答案，就随机一个选项来点击，如果是非隐私模式，截屏查找正确答案，否则选项正确才更新答案
+                click_answer_radio_button(a_uis, question, answers, random(0, a_uis.length - 1), true, obj_node);
+                console.error('新题目已更新到题库');
+                falseNum++;
+                fSet("info", "本轮收录错题：" + falseNum + " 个");
+                sleep(2000);
+            }
+        }
+
+        //显示已答题数
+        try {
+            if (textStartsWith("连续答对").exists()) {
+                let lx_true = textStartsWith("连续答对").findOne(2000).text();
+                console.info(lx_true);
+            }
+        } catch (error) {
+            console.error("显示题数报错" + error);
+        }
+
+        sleep(cycle_wait_time);
+        // 处理答题失败和50题选项
+        //console.log("处理答题失败和50题选项");
+        if (jump_tips_50TrueQuestions() || jump_tips_ErrorAnswer()) {
+            sleep(2000)
+        }
+        if (textContains("全部通关").exists()) {
+            back();
+        }
+
+    }
 }
 is_logExist();//判断日志文件是否存在
 exit();
@@ -442,28 +458,28 @@ function find_true_answer_from_img(Nodes, region) {
         region: region,
         threshold: 4
     });
-if (point == null) {
-    images.save(img, "/sdcard/2.jpg");
-    console.log(region);
-    console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
-    throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
-}
-img.recycle();
-var true_ans = null
-var x = point.x
-var y = point.y
-for (var i = 0; i < Nodes.length; i++) {
-    var a = Nodes[i].bounds()
-    if (y >= a.top && y <= a.bottom) {
-        true_ans = Nodes[i].text();
-        break;
+    if (point == null) {
+        images.save(img, "/sdcard/2.jpg");
+        console.log(region);
+        console.log("Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误")
+        throw "Error:未找到正确答案！截屏失效(手动更改隐私模式参数)或颜色错误"
     }
-}
-if (true_ans == null) {
-    console.log("Error:未找到答案！")
-    throw "Error:未找到答案！"
-}
-return true_ans
+    img.recycle();
+    var true_ans = null
+    var x = point.x
+    var y = point.y
+    for (var i = 0; i < Nodes.length; i++) {
+        var a = Nodes[i].bounds()
+        if (y >= a.top && y <= a.bottom) {
+            true_ans = Nodes[i].text();
+            break;
+        }
+    }
+    if (true_ans == null) {
+        console.log("Error:未找到答案！")
+        throw "Error:未找到答案！"
+    }
+    return true_ans
 }
 function join_question_with_answer(question, answers) {
     question = question.replace(/ /g, "")
