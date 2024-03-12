@@ -201,6 +201,7 @@ function task(taskName) {
             sleep(2000)
         }
         if (textContains("全部通关").exists()) {
+            console.info(taskName + ":" + lx_true);
             logWrite(taskName + ":" + lx_true);
             back();
             break;
