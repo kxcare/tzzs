@@ -119,8 +119,7 @@ if (shuaTong) {
         toastLog("刷题任务马上开始");
         sleep(3000);
     }
-    //"时事政治",
-    var sel_task = ["法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
+    var sel_task = ["时事政治","法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
     for (i = 0; i <= sel_task.length - 1; i++) {
         let task_click = text(sel_task[i]).findOne().parent().click();
         if (task_click) {
