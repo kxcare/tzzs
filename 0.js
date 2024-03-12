@@ -120,7 +120,7 @@ for (i = 0; i <= sel_task.length - 1; i++) {
     let task_click = text(sel_task[i]).findOne().parent().click();
     if (task_click) {
         sleep(3000);
-        task();
+        task(sel_task[i]);
     }
     toastLog(sel_task[i]+"已刷完");
     sleep(3000);
@@ -129,7 +129,7 @@ for (i = 0; i <= sel_task.length - 1; i++) {
 console.log("完成任务截屏：" + auto.service.performGlobalAction(9));
 is_logExist();//判断日志文件是否存在
 finish();
-function task() {
+function task(taskName) {
     while (true) {
         //is_logExist();//判断日志文件是否存在
         // 获取根节点
@@ -183,9 +183,10 @@ function task() {
         }
 
         //显示已答题数
+        let lx_true = "";
         try {
             if (textStartsWith("连续答对").exists()) {
-                let lx_true = textStartsWith("连续答对").findOne(2000).text();
+                lx_true = textStartsWith("连续答对").findOne(2000).text();
                 console.info(lx_true);
             }
         } catch (error) {
@@ -199,6 +200,7 @@ function task() {
             sleep(2000)
         }
         if (textContains("全部通关").exists()) {
+            logWrite(taskName + ":" + lx_true);
             back();
         }
 
