@@ -38,6 +38,7 @@ var re_times = 0;
 var STZS_CONFIG = storages.create("STZS_CONFIG");
 var cycle_wait_time = STZS_CONFIG.get("cycle_wait_time", "1100");
 var chongzhi_cishu = STZS_CONFIG.get("chongzhi_cishu", "10");
+var shuaTong = STZS_CONFIG.get("shuaTong", false);
 
 // ================================================
 // =====================主程序运行====================
@@ -110,23 +111,26 @@ console.log("开始循环答题");
 fClear();
 fInfo("本轮收录错题：" + falseNum + " 个");
 
-text("时事政治").waitFor();
-if(text("时事政治").exists()){
-    toastLog("刷题任务马上开始");
-    sleep(3000);
-}
-//"时事政治",
-var sel_task = ["法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
-for (i = 0; i <= sel_task.length - 1; i++) {
-    let task_click = text(sel_task[i]).findOne().parent().click();
-    if (task_click) {
+if (shuaTong) {
+    task();
+} else {
+    text("时事政治").waitFor();
+    if (text("时事政治").exists()) {
+        toastLog("刷题任务马上开始");
         sleep(3000);
-        task(sel_task[i]);
     }
-    toastLog(sel_task[i]+"已刷完");
-    sleep(3000);
+    //"时事政治",
+    var sel_task = ["法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
+    for (i = 0; i <= sel_task.length - 1; i++) {
+        let task_click = text(sel_task[i]).findOne().parent().click();
+        if (task_click) {
+            sleep(3000);
+            task(sel_task[i]);
+        }
+        toastLog(sel_task[i] + "已刷完");
+        sleep(3000);
+    }
 }
-
 console.log("完成任务截屏：" + auto.service.performGlobalAction(9));
 is_logExist();//判断日志文件是否存在
 finish();
