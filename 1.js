@@ -230,11 +230,14 @@ function do_duizhan1(renshu) {
             continue;
         }
         // 根据父框的孩子数
+        let que_x = "";
+        let que_y = "";
+        let que_w = "";
+        let que_h = "";
         if (view_d28.childCount() > 0) {
-            let que_x = view_d28.bounds().left;
-            let que_y = view_d28.bounds().top;
-            let que_w = view_d28.bounds().width();
-            let que_h = "";
+            que_x = view_d28.bounds().left;
+            que_y = view_d28.bounds().top;
+            que_w = view_d28.bounds().width();
             if (view_d28.child(0).text().length <= 4) { //有来源的是前面两个空格元素，文本为4个空格
                 que_h = view_d28.child(2).bounds().top - view_d28.bounds().top;
                 if (que_h < 32) {
