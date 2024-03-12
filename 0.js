@@ -202,6 +202,7 @@ function task(taskName) {
         if (textContains("全部通关").exists()) {
             logWrite(taskName + ":" + lx_true);
             back();
+            break;
         }
 
     }
