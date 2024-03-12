@@ -110,6 +110,7 @@ console.log("开始循环答题");
 fClear();
 fInfo("本轮收录错题：" + falseNum + " 个");
 
+text("时事政治").waitFor();
 if(text("时事政治").exists()){
     toastLog("刷题任务马上开始");
     sleep(3000);
