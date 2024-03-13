@@ -119,8 +119,9 @@ if (shuaTong) {
         toastLog("刷题任务马上开始");
         sleep(3000);
     }
-    var sel_task = ["时事政治","法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
+    var sel_task = ["时事政治", "法律法规", "文学知识", "历史文化", "科普知识", "军事国防", "卫生体育", "生活常识", "艺术知识", "财经知识", "“三农”知识", "影视知识"];
     for (i = 0; i <= sel_task.length - 1; i++) {
+        fSet("title", (i + 1) + "-" + sel_task[i]);
         let task_click = text(sel_task[i]).findOne().parent().click();
         if (task_click) {
             sleep(3000);
@@ -128,6 +129,12 @@ if (shuaTong) {
         }
         toastLog(sel_task[i] + "已刷完");
         sleep(3000);
+    }
+    toastLog("开始刷通关");
+    let task_click = textStartsWith("total").findOne().parent().click();
+    if (task_click) {
+        sleep(3000);
+        task();
     }
 }
 console.log("完成任务截屏：" + auto.service.performGlobalAction(9));
