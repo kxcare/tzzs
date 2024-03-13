@@ -131,6 +131,7 @@ if (shuaTong) {
         sleep(3000);
     }
     toastLog("开始刷通关");
+    fSet("title", "刷总题库");
     let task_click = textStartsWith("total").findOne().parent().click();
     if (task_click) {
         sleep(3000);
