@@ -126,6 +126,7 @@ if (shuaTong) {
         if (task_click) {
             sleep(3000);
             task(sel_task[i]);
+            back();
         }
         toastLog(sel_task[i] + "已刷完");
         sleep(3000);
@@ -214,7 +215,6 @@ function task(taskName) {
         if (textContains("全部通关").exists()) {
             console.info(taskName + ":" + lx_true);
             logWrite(taskName + ":" + lx_true);
-            back();
             break;
         }
 
