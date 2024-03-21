@@ -46,7 +46,16 @@ else {
         fInfo("题库创建成功")
     }
 }
-
+// 定义日志文件的路径
+var logFilePath = "/sdcard/跑题库/四人赛运行日志.txt";
+// 创建日志文件
+if (files.isFile(logFilePath)) {
+    console.log("存在日志文件");
+}
+else {
+    console.log("没有日志文件，将写新文件输出");
+    files.create(logFilePath);
+}
 // 自动允许权限进程
 threads.start(function () {
     //在新线程执行的代码
@@ -241,8 +250,8 @@ function do_duizhan1(renshu) {
             if (view_d28.child(0).text().length <= 4) { //有来源的是前面两个空格元素，文本为4个空格
                 que_h = view_d28.child(2).bounds().top - view_d28.bounds().top;
                 if (que_h < 32) {
-                    fError("有来源，图片高度不够");
-                    console.log(view_d28.child(2).bounds().top, view_d28.bounds().top);
+                    logWrite("有来源，图片高度不够");
+                    logWrite(view_d28.child(2).bounds().top, view_d28.bounds().top);
                     let img = captureScreen();
                     que_h = view_d28.child(0).bounds().bottom - view_d28.bounds().top;
                     let que_img = images.clip(img, que_x, que_y, que_w, que_h);
@@ -256,8 +265,8 @@ function do_duizhan1(renshu) {
             } else { //无来源的是题目，文本为8个空格
                 que_h = view_d28.child(0).bounds().bottom - view_d28.bounds().top;
                 if (que_h < 32) {
-                    fError("无来源，图片高度不够");
-                    console.log(view_d28.child(0).bounds().bottom, view_d28.bounds().top);
+                    logWrite("无来源，图片高度不够");
+                    logWrite(view_d28.child(0).bounds().bottom, view_d28.bounds().top);
                     let img = captureScreen();
                     images.save(img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
                     img.recycle();
@@ -972,4 +981,30 @@ function imgSave(img){
     let imgname = `${jingmiao}`;
     images.save(img, pathname + "/" + imgname + ".jpg", "jpg", 60);
     toastLog("截图已保存");
+}
+
+//日志写到文件
+function logWrite(logContent) {
+    let currentTime = dateFormat(new Date(), 'yyyy年MM月dd日 hh:mm:ss'); // 获取当前时间
+    re_log = currentTime + "   " + logContent; // 日志信息
+    // 写入日志
+    files.append(logFilePath, re_log + "\n");
+}
+//格式化时间
+function dateFormat(thisDate, fmt) {
+    var o = {
+        "M+": thisDate.getMonth() + 1,
+        "d+": thisDate.getDate(),
+        "h+": thisDate.getHours(),
+        "m+": thisDate.getMinutes(),
+        "s+": thisDate.getSeconds(),
+        "q+": Math.floor((thisDate.getMonth() + 3) / 3),
+        "S": thisDate.getMilliseconds()
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (thisDate.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
 }
