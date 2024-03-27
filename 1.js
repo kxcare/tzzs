@@ -255,6 +255,7 @@ function do_duizhan1(renshu) {
                     let img = captureScreen();
                     que_h = view_d28.child(0).bounds().bottom - view_d28.bounds().top;
                     let que_img = images.clip(img, que_x, que_y, que_w, que_h);
+                    logWrite(que_x, que_y, que_w, que_h);
                     images.save(que_img, '/sdcard/跑题库/img' + random(1,1000) + '.png');
                     img.recycle();
                     que_img.recycle();
