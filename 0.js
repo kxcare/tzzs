@@ -287,7 +287,12 @@ function swipe_to_view_the_last_answer(answer_uis) {
 }
 function click_answer_radio_button(answer_uis, question, answers, idx, isMustPost, obj_node) {
     // var ansb = obj_node.child(1).bounds();
-    answer_uis[idx].parent().click();
+    try {
+        answer_uis[idx].parent().click();
+    } catch (e) {
+        logWrite("找不到点击控件" + idx + ",返回重试");
+        return true;
+    }
     // if (ansb.left >= device_w / 2) {
     //     answers_region = [0, Math.floor(device_h / 4), device_w, Math.floor(device_h * 3 / 4)];
     //     console.log("答案检测区域已强制更换");
